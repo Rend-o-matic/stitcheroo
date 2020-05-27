@@ -1,0 +1,15 @@
+{
+  "name": "stitcher",
+  "version": "1.0.0",
+  "description": "",
+  "main": "combine.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "boxjam": "0.0.21",
+    "shortid": "^2.2.15"
+  }
+}
