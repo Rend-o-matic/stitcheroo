@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "boxjam": "0.0.21",
+    "ffmpeg-static": "^4.2.2",
+    "ffprobe-static": "^3.0.0",
     "shortid": "^2.2.15"
   }
 }
