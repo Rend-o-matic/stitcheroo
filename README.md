@@ -1,4 +1,5 @@
-# Stitcheroo
+# Stitcheroo
+
 Stitch all of your videos into a lovely big video wall.
 
 ## Description
@@ -42,3 +43,7 @@ stitcheroo(videosToCombine)
 #### VIDEO FILE PATHS
 
 This is an array of file paths pointing to the videos you'd like to combine. The videos passed will be proportionately scaled to fit within a 1920x1080 pixel container (HD video dimensions) and centered both horizontally and vertically.
+
+## Output
+
+![An animated GIF of the kind of output you can expect](output.gif)
