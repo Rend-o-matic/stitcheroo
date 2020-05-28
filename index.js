@@ -92,7 +92,7 @@ function stitchVideo(videos, container, margin, shouldCenter){
         // Construct input arguments
         const INPUT_STREAM_CHANNELS_FLAGS = videos.map((i, idx) => { return `[${idx+1}]` }).join('');
 
-        let stitchArguments = ['-loop', 1, '-i', 'vid_back.png', ];
+        let stitchArguments = ['-loop', 1, '-i', `${__dirname}/vid_back.png`, ];
 
         const inputArguments = [];
 
