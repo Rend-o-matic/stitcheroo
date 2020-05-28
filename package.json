@@ -1,6 +1,6 @@
 {
-  "name": "stitcher",
-  "version": "1.0.0",
+  "name": "stitcheroo",
+  "version": "0.0.q",
   "description": "",
   "main": "combine.js",
   "scripts": {
@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "boxjam": "0.0.21",
+    "debug": "^4.1.1",
     "ffmpeg-static": "^4.2.2",
     "ffprobe-static": "^3.0.0",
     "shortid": "^2.2.15"
