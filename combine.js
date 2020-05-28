@@ -1,8 +1,11 @@
 const child_process = require('child_process');
 const ffprobe = require('ffprobe-static');
-const ffmpeg_path = require('ffprobe-static').path;
+const ffmpeg = require('ffmpeg-static');
 const shortid = require('shortid').generate;
 const boxjam = require('boxjam');
+
+// console.log(ffmpeg);
+// process.exit();
 
 const inputFiles = ['1.mov', '2_mod.mov', '3_mod.mov', '2_mod.mov', '3_mod.mov', '1.mov', '3_mod.mov', '1.mov', '2_mod.mov', '2_mod.mov', '3_mod.mov', '1.mov', '1.mov', '2_mod.mov', '3_mod.mov', '2_mod.mov', '1.mov',  '2_mod.mov',  '3_mod.mov',  '2_mod.mov',  '1.mov',  '2_mod.mov',  '3_mod.mov',  '1.mov'].map(filePath => {
     return new Promise( (resolve, reject) => {
@@ -31,7 +34,7 @@ Promise.all(inputFiles)
 
         const boxes = boxjam(results, {width : 1920, height : 1080}, 10, true);
 
-        const BASE_CMD = `ffmpeg -loop 1 -i vid_back.png`;
+        const BASE_CMD = `${ffmpeg} -loop 1 -i vid_back.png`;
 
         const CMD_WITH_INPUTS = `${BASE_CMD} -i ${boxes.map(info => {return info.path}).join(' -i ')}`;
 
