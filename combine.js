@@ -4,9 +4,6 @@ const ffmpeg = require('ffmpeg-static');
 const shortid = require('shortid').generate;
 const boxjam = require('boxjam');
 
-// console.log(ffmpeg);
-// process.exit();
-
 const inputFiles = ['1.mov', '2_mod.mov', '3_mod.mov', '2_mod.mov', '3_mod.mov', '1.mov', '3_mod.mov', '1.mov', '2_mod.mov', '2_mod.mov', '3_mod.mov', '1.mov', '1.mov', '2_mod.mov', '3_mod.mov', '2_mod.mov', '1.mov',  '2_mod.mov',  '3_mod.mov',  '2_mod.mov',  '1.mov',  '2_mod.mov',  '3_mod.mov',  '1.mov'].map(filePath => {
     return new Promise( (resolve, reject) => {
         child_process.exec(`${ffprobe.path} -v error -show_entries stream=width,height -of default=noprint_wrappers=1:nokey=1 ${filePath}`, (error, stdout, stderr) => {
