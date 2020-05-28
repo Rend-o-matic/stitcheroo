@@ -4,7 +4,7 @@ const ffmpeg_path = require('ffprobe-static').path;
 const shortid = require('shortid').generate;
 const boxjam = require('boxjam');
 
-const inputFiles = ['1.mov', '2_mod.mov', '3_mod.mov', '1.mov'].map(filePath => {
+const inputFiles = ['1.mov', '2_mod.mov', '3_mod.mov', '2_mod.mov', '3_mod.mov', '1.mov', '3_mod.mov', '1.mov', '2_mod.mov', '2_mod.mov', '3_mod.mov', '1.mov', '1.mov', '2_mod.mov', '3_mod.mov', '2_mod.mov', '1.mov',  '2_mod.mov',  '3_mod.mov',  '2_mod.mov',  '1.mov',  '2_mod.mov',  '3_mod.mov',  '1.mov'].map(filePath => {
     return new Promise( (resolve, reject) => {
         child_process.exec(`${ffprobe.path} -v error -show_entries stream=width,height -of default=noprint_wrappers=1:nokey=1 ${filePath}`, (error, stdout, stderr) => {
             if (error) {
@@ -61,9 +61,13 @@ Promise.all(inputFiles)
 
         }
 
-        const OUTPUT_FLAGS = `-map "[${lastKey}]" -movflags +faststart  -filter_complex amerge=inputs=${inputFiles.length} -ac ${inputFiles.length} output_dynamic.mp4 -y`
+        const INPUT_STREAM_CHANNELS_FLAGS = inputFiles.map((i, idx) => { return `[${idx+1}]` }).join('');
 
-        const FINAL_CMD = `${CMD_WITH_INPUTS} -filter_complex   ${FILTER} ${OUTPUT_FLAGS}`;
+        // Combine audio streams
+
+        const OUTPUT_FLAGS = `-map "[${lastKey}]" -movflags +faststart  -filter_complex "${INPUT_STREAM_CHANNELS_FLAGS} amix=inputs=${inputFiles.length}" -c:a mp3 output_dynamic.mp4 -y`
+
+        const FINAL_CMD = `${CMD_WITH_INPUTS} -filter_complex ${FILTER} ${OUTPUT_FLAGS}`;
 
         console.log(FINAL_CMD);
 
