@@ -1,7 +1,6 @@
 node_modules/
 *.mp4
 *.mov
-*.png
 *.sh
 *.webm
 trigger.js
