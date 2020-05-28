@@ -1,8 +1,8 @@
 {
   "name": "stitcheroo",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "",
-  "main": "combine.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
