@@ -62,7 +62,7 @@ function stitchVideo(videos, container, margin, shouldCenter){
 
     return new Promise( (resolve, reject) => {
 
-        const OUTPUT_FILE_NAME = `${shortid()}.mp4`
+        const OUTPUT_FILE_NAME = `${__dirname}/${shortid()}.mp4`
         const boxes = boxjam(videos, container, margin, shouldCenter);
 
         let FILTER = `"[0:v]scale=${container.width}:${container.height}[bg]; `
@@ -127,9 +127,9 @@ function stitchVideo(videos, container, margin, shouldCenter){
 
             if(code === 0){
 
-                fs.readFile(`${__dirname}/${OUTPUT_FILE_NAME}`, (err, data) => {
+                fs.readFile(`${OUTPUT_FILE_NAME}`, (err, data) => {
                     
-                    cleanUp(`${__dirname}/${OUTPUT_FILE_NAME}`);
+                    cleanUp(`${OUTPUT_FILE_NAME}`);
                     if(err){
                         debug('Filesystem read err:'. err);
                         reject(err);
@@ -142,7 +142,7 @@ function stitchVideo(videos, container, margin, shouldCenter){
             } else {
                 debug(`FFMPEG exited and was not happy. Error code: ${code}`);
                 reject();
-                cleanUp(`${__dirname}/${OUTPUT_FILE_NAME}`);
+                cleanUp(`${OUTPUT_FILE_NAME}`);
             }
 
         });
