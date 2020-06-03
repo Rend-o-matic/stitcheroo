@@ -18,7 +18,7 @@ const fs = require('fs');
 
 const videosToCombine = [`${__dirname}/vid_1.mp4`, `${__dirname}/vid_2.mp4`, `${__dirname}/vid_3.mp4`]
 
-stitcheroo(videosToCombine)
+stitcheroo(videosToCombine, true)
     .then(data => {
 
         // Data is a buffer with the generated video contained within.
@@ -34,15 +34,31 @@ stitcheroo(videosToCombine)
     })
 ;
 
+stitcheroo(videosToCombine, false)
+    .then(data => {
+
+        console.log(data) // Will be a path to the rendered file instead.
+
+    })
+    .catch(err => {
+        console.log('Err:', err);
+    })
+;
+
 ```
 
 ## Stitcheroo Arguments
 
-### stitcheroo(`[VIDEO FILE PATHS ARRAY]`)
+### stitcheroo(`[VIDEO FILE PATHS ARRAY]`, [RETURN AS BUFFER BOOLEAN])
 
 #### VIDEO FILE PATHS
 
 This is an array of file paths pointing to the videos you'd like to combine. The videos passed will be proportionately scaled to fit within a 1920x1080 pixel container (HD video dimensions) and centered both horizontally and vertically.
+
+#### RETURN AS BUFFER
+Default: true
+
+The default behaviour of stitcheroo is to return a buffer of the rendered video. However, if you wish, you can pass `false` as an argument and the path to the rendered file will be returned instead. 
 
 ## Output
 

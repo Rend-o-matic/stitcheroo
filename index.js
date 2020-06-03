@@ -58,7 +58,7 @@ function probeVideo(filePath){
 
 }
 
-function stitchVideo(videos, container, margin, shouldCenter){
+function stitchVideo(videos, container, margin, shouldCenter, returnAsBuffer){
 
     return new Promise( (resolve, reject) => {
 
@@ -127,17 +127,23 @@ function stitchVideo(videos, container, margin, shouldCenter){
 
             if(code === 0){
 
-                fs.readFile(`${OUTPUT_FILE_NAME}`, (err, data) => {
-                    
-                    cleanUp(`${OUTPUT_FILE_NAME}`);
-                    if(err){
-                        debug('Filesystem read err:'. err);
-                        reject(err);
-                    } else {
-                        resolve(data);
-                    }
+                if(!returnAsBuffer){
+                    resolve(OUTPUT_FILE_NAME);
+                } else {
 
-                });
+                    fs.readFile(`${OUTPUT_FILE_NAME}`, (err, data) => {
+                        
+                        cleanUp(`${OUTPUT_FILE_NAME}`);
+                        if(err){
+                            debug('Filesystem read err:'. err);
+                            reject(err);
+                        } else {
+                            resolve(data);
+                        }
+    
+                    });
+
+                }
 
             } else {
                 debug(`FFMPEG exited and was not happy. Error code: ${code}`);
@@ -152,7 +158,7 @@ function stitchVideo(videos, container, margin, shouldCenter){
 
 }
 
-module.exports = (videos) => {
+module.exports = (videos, returnAsBuffer = true) => {
 
     const inputFiles = videos.map(filePath => probeVideo(filePath));
 
@@ -160,7 +166,7 @@ module.exports = (videos) => {
         .then(results => {
 
             // return results;
-            return stitchVideo(results, {width : 1920, height : 1080}, 10, true);
+            return stitchVideo(results, {width : 1920, height : 1080}, 10, true, returnAsBuffer);
 
         })
         .catch(err => {
