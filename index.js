@@ -58,7 +58,7 @@ function probeVideo(filePath){
 
 }
 
-function stitchVideo(videos, container, margin, shouldCenter, returnAsBuffer){
+function stitchVideo(videos, container, margin, shouldCenter, returnAsFile){
 
     return new Promise( (resolve, reject) => {
 
@@ -104,7 +104,7 @@ function stitchVideo(videos, container, margin, shouldCenter, returnAsBuffer){
         }
 
         // Construct the video + audio filter arguments and output paths
-        const filterArguments = ['-filter_complex', FILTER, '-map', `"[${lastKey}]"`, '-movflags', '+faststart ', '-filter_complex', `"${INPUT_STREAM_CHANNELS_FLAGS}`, `amix=inputs=${videos.length}"`, '-c:a', 'mp3', OUTPUT_FILE_NAME, '-y'];
+        const filterArguments = ['-filter_complex', FILTER, '-map', `"[${lastKey}]"`, '-movflags', '+faststart ', '-filter_complex', `"${INPUT_STREAM_CHANNELS_FLAGS}`, `amix=inputs=${videos.length}"`, '-c:a', 'mp3', '-threads', 8, OUTPUT_FILE_NAME, '-y'];
 
         // And combine all of the arguments
         stitchArguments = stitchArguments.concat(inputArguments, filterArguments);
@@ -127,7 +127,7 @@ function stitchVideo(videos, container, margin, shouldCenter, returnAsBuffer){
 
             if(code === 0){
 
-                if(!returnAsBuffer){
+                if(returnAsFile){
                     resolve(OUTPUT_FILE_NAME);
                 } else {
 
@@ -158,7 +158,32 @@ function stitchVideo(videos, container, margin, shouldCenter, returnAsBuffer){
 
 }
 
-module.exports = (videos, returnAsBuffer = true) => {
+module.exports = (videos, userOptions = {}) => {
+
+    if(userOptions.dimensions){
+        
+        if(!userOptions.dimensions.width || !userOptions.dimensions.height){
+            return Promise.reject(`Invalid dimension values passed. Both "width" and "height" must be passed. Function received ${JSON.stringify(userOptions.dimensions)}`)
+        }
+
+    }
+
+    const options = {
+        dimensions : {
+            width: 1920,
+            height: 1080
+        },
+        margin: 20,
+        center: true,
+        returnAsFile: false
+    };
+
+    Object.keys(userOptions).forEach(key => {
+        options[key] = userOptions[key];
+    });
+
+    debug(`Options passed by user: ${JSON.stringify(userOptions)}`);
+    debug(`Options passed for rendering: ${JSON.stringify(options)}`);
 
     const inputFiles = videos.map(filePath => probeVideo(filePath));
 
@@ -166,7 +191,7 @@ module.exports = (videos, returnAsBuffer = true) => {
         .then(results => {
 
             // return results;
-            return stitchVideo(results, {width : 1920, height : 1080}, 10, true, returnAsBuffer);
+            return stitchVideo(results, options.dimensions, options.margin, options.center, options.returnAsFile);
 
         })
         .catch(err => {
