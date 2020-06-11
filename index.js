@@ -5,6 +5,14 @@ const ffprobe = require('ffprobe-static');
 const ffmpeg = require('ffmpeg-static');
 const shortid = require('shortid').generate;
 const boxjam = require('boxjam');
+const os = require('os');
+const path = require('path')
+
+// generate a temporary filename in the system temporary directory
+// given the file's extension
+const tmp = (extension) => {
+  return path.join(os.tmpdir(), `${shortid()}${extension}`) 
+}
 
 // Delete created files when they've been loaded into memory
 // or if the program crashes.
@@ -62,7 +70,7 @@ function stitchVideo(videos, container, margin, shouldCenter, returnAsFile, pan)
 
     return new Promise( (resolve, reject) => {
 
-        const OUTPUT_FILE_NAME = `${__dirname}/${shortid()}.mp4`
+        const OUTPUT_FILE_NAME = tmp('.mp4')
         const boxes = boxjam(videos, container, margin, shouldCenter);
 
         let FILTER = `"[0:v]scale=${container.width}:${container.height}[bg]; `
