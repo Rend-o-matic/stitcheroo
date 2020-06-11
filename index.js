@@ -58,7 +58,7 @@ function probeVideo(filePath){
 
 }
 
-function stitchVideo(videos, container, margin, shouldCenter, returnAsFile){
+function stitchVideo(videos, container, margin, shouldCenter, returnAsFile, pan){
 
     return new Promise( (resolve, reject) => {
 
@@ -89,8 +89,28 @@ function stitchVideo(videos, container, margin, shouldCenter, returnAsFile){
 
         }
 
-        // Construct input arguments
-        const INPUT_STREAM_CHANNELS_FLAGS = videos.map((i, idx) => { return `[${idx+1}]` }).join('');
+        // Construct audio arguments
+        let AUDIO_FLAGS
+        if (pan) {
+            // pan audio left or right depending on its position in the output video
+            // [0]stereotools=mpan=-0.9 [x0]; [1]stereotools=mpan=0.9 [x1]; [x0] [x1] amix=inputs=2
+            AUDIO_FLAGS = videos.map((i, idx) => { 
+                const n = idx + 1
+                // calculate stereo pan from where the middle of the video overlay
+                // pan goes from -1 (left) to 0 (centre) to 1 (right)
+                const pan = (2 * ((boxes[idx].x + boxes[idx].width/2) / container.width) - 1).toFixed(1)
+                return `[${n}]stereotools=mpan=${pan} [x${n}];`
+            }).join('');
+            const MIX_FLAGS = videos.map((i, idx) => { 
+                const n = idx + 1
+                return `[x${n}]`
+            }).join(' ')
+            AUDIO_FLAGS += MIX_FLAGS
+        } else {
+            // no audio panning, simply mix each video's audio together
+            AUDIO_FLAGS = videos.map((i, idx) => { return `[${idx+1}]` }).join('');
+        }
+        AUDIO_FLAGS += ` amix=inputs=${videos.length}"`
 
         let stitchArguments = ['-loop', 1, '-i', `${__dirname}/vid_back.png`, ];
 
@@ -104,7 +124,7 @@ function stitchVideo(videos, container, margin, shouldCenter, returnAsFile){
         }
 
         // Construct the video + audio filter arguments and output paths
-        const filterArguments = ['-filter_complex', FILTER, '-map', `"[${lastKey}]"`, '-movflags', '+faststart ', '-filter_complex', `"${INPUT_STREAM_CHANNELS_FLAGS}`, `amix=inputs=${videos.length}"`, '-c:a', 'mp3', '-threads', 8, OUTPUT_FILE_NAME, '-y'];
+        const filterArguments = ['-filter_complex', FILTER, '-map', `"[${lastKey}]"`, '-movflags', '+faststart ', '-filter_complex', `"${AUDIO_FLAGS}`, '-c:a', 'mp3', '-threads', 8, OUTPUT_FILE_NAME, '-y'];
 
         // And combine all of the arguments
         stitchArguments = stitchArguments.concat(inputArguments, filterArguments);
@@ -175,7 +195,8 @@ module.exports = (videos, userOptions = {}) => {
         },
         margin: 20,
         center: true,
-        returnAsFile: false
+        returnAsFile: false,
+        pan: true
     };
 
     Object.keys(userOptions).forEach(key => {
@@ -191,7 +212,7 @@ module.exports = (videos, userOptions = {}) => {
         .then(results => {
 
             // return results;
-            return stitchVideo(results, options.dimensions, options.margin, options.center, options.returnAsFile);
+            return stitchVideo(results, options.dimensions, options.margin, options.center, options.returnAsFile, options.pan);
 
         })
         .catch(err => {
