@@ -28,7 +28,8 @@ const options = {
     },
     margin: 20,
     center: true,
-    returnAsFile: false
+    returnAsFile: false,
+    pan: true
 };
 
 stitcheroo(videosToCombine, options)
@@ -68,7 +69,8 @@ Defaults:
     },
     margin: 20,
     center: true,
-    returnAsFile: false
+    returnAsFile: false,
+    pan: true
 }
 ```
 
@@ -87,6 +89,12 @@ Center the passed videos horizontally and vertically in the output video
 ##### returnAsFile
 
 By default, Stitcheroo will return your rendered video as a buffer which you can handle as you wish. If you would rather handle a path to the file, you can pass `true` on this property.
+
+##### pan
+
+By default (`true`), Stitcheroo will pan the audio of each video to the left or right depending on its position in the output video e.g. videos on the left hand side of the output video will have their audio panned to the left.
+
+To leave the input audio alone, pass `false` for this property.
 
 ## Output
 
