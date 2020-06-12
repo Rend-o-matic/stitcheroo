@@ -165,7 +165,7 @@ function stitchVideo(videos, container, margin, shouldCenter, returnAsFile, pan,
 
         // And combine all of the arguments
         stitchArguments = stitchArguments.concat(inputArguments, filterArguments);
-        console.log(stitchArguments)
+
         // Then execute!
         const stitch = child_process.spawn(ffmpeg, stitchArguments, { shell: true });
 
