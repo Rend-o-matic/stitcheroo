@@ -70,7 +70,11 @@ Defaults:
     margin: 20,
     center: true,
     returnAsFile: false,
-    pan: true
+    pan: true,
+    reverb: {
+        type: 'none',
+        mix: 0.1
+    }
 }
 ```
 
@@ -95,6 +99,20 @@ By default, Stitcheroo will return your rendered video as a buffer which you can
 By default (`true`), Stitcheroo will pan the audio of each video to the left or right depending on its position in the output video e.g. videos on the left hand side of the output video will have their audio panned to the left.
 
 To leave the input audio alone, pass `false` for this property.
+
+##### reverb
+
+The reverb object describes what type and how much reverberation effect to add to that output audio. By default none is added:
+
+```js
+  reverb: {
+      type: 'hall', 
+      mix: 0.3
+  }
+```
+
+- `reverb.type` - one of: `none`, `smallroom`, `largeroom`, `hall`, `church`.
+- `reverb.mix` - a number between 0 and 1 that determines how much reverb effect is added into the mix. 0 = none, 1 = full.
 
 ## Output
 

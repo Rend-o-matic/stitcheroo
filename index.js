@@ -66,12 +66,22 @@ function probeVideo(filePath){
 
 }
 
-function stitchVideo(videos, container, margin, shouldCenter, returnAsFile, pan){
+function stitchVideo(videos, container, margin, shouldCenter, returnAsFile, pan, reverb){
 
     return new Promise( (resolve, reject) => {
 
         const OUTPUT_FILE_NAME = tmp('.mp4')
         const boxes = boxjam(videos, container, margin, shouldCenter);
+
+        // ensure reverb parameters are valid, if supplied
+        if (reverb) {
+            if (!['none', 'smallroom', 'largeroom', 'hall', 'church'].includes(reverb.type)) {
+                reverb.type = 'none'
+            }
+            if (typeof reverb.mix !== 'number' || reverb.mix < 0 || reverb.mix > 1) {
+                reverb.mix = 0.1
+            }
+        }
 
         let FILTER = `"[0:v]scale=${container.width}:${container.height}[bg]; `
 
@@ -118,7 +128,20 @@ function stitchVideo(videos, container, margin, shouldCenter, returnAsFile, pan)
             // no audio panning, simply mix each video's audio together
             AUDIO_FLAGS = videos.map((i, idx) => { return `[${idx+1}]` }).join('');
         }
-        AUDIO_FLAGS += ` amix=inputs=${videos.length}"`
+        AUDIO_FLAGS += ` amix=inputs=${videos.length}`
+
+        // additional audio processing if reverb is selected
+        let reverbpath
+        if (reverb && reverb.type !== 'none' && reverb.mix > 0) {
+            reverbpath = path.join(__dirname, `${reverb.type}.wav`);
+            const mix = reverb.mix * 10
+            const weights = `${10 - mix} ${mix}`
+            AUDIO_FLAGS += '[mix]; '; // name the previous audio stream as "mix"
+            AUDIO_FLAGS += '[mix] asplit [mix1][mix2];'; // split the mix into two: mix1 for IR processing, mix2 for final mix
+            AUDIO_FLAGS += `[mix1] [${videos.length + 1}] afir=dry=10:wet=10 [reverb]; `; // apply IR to the mix1
+            AUDIO_FLAGS += `[mix2] [reverb] amix=inputs=2:weights=${weights}`; // blend mix2 + reverb 
+        }
+        AUDIO_FLAGS += '"'
 
         let stitchArguments = ['-loop', 1, '-i', `${__dirname}/vid_back.png`, ];
 
@@ -129,6 +152,12 @@ function stitchVideo(videos, container, margin, shouldCenter, returnAsFile, pan)
             inputArguments.push('-i');
             inputArguments.push(`${boxes[v].path}`);
 
+        }
+
+        // if we are doing reverb, we need to load the Impulse Response wav file as another inputs
+        if (reverbpath) {
+            inputArguments.push('-i');
+            inputArguments.push(`${reverbpath}`);
         }
 
         // Construct the video + audio filter arguments and output paths
@@ -204,7 +233,11 @@ module.exports = (videos, userOptions = {}) => {
         margin: 20,
         center: true,
         returnAsFile: false,
-        pan: true
+        pan: true,
+        reverb: {
+            type: 'none',
+            mix: 0.1
+        }
     };
 
     Object.keys(userOptions).forEach(key => {
@@ -220,7 +253,7 @@ module.exports = (videos, userOptions = {}) => {
         .then(results => {
 
             // return results;
-            return stitchVideo(results, options.dimensions, options.margin, options.center, options.returnAsFile, options.pan);
+            return stitchVideo(results, options.dimensions, options.margin, options.center, options.returnAsFile, options.pan, options.reverb);
 
         })
         .catch(err => {
