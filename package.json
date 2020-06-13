@@ -1,12 +1,12 @@
 {
   "name": "stitcheroo",
-  "version": "1.2.0",
+  "version": "1.2.01",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Sean M. Tracey",
+  "author": "Sean M. Tracey & Glynn Bird",
   "license": "GPL-3.0",
   "homepage": "https://github.com/choirless/stitcheroo",
   "dependencies": {
