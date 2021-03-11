@@ -68,7 +68,7 @@ This is an array of file paths pointing to the videos you'd like to combine. The
 #### OPTIONS
 
 Defaults:
-```json
+```javascript
 {
     dimensions : {
         width: 1920,
@@ -111,7 +111,7 @@ To leave the input audio alone, pass `false` for this property.
 
 The reverb object describes what type and how much reverberation effect to add to that output audio. By default none is added:
 
-```js
+```javascript
   reverb: {
       type: 'hall', 
       mix: 0.3
