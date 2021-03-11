@@ -1,12 +1,12 @@
-# Stitcheroo
+# stitcheroo
 
 Stitch all of your videos into a lovely big video wall.
 
 ## Description
 
-Stitcheroo was created as part of the [Choirless project](https://github.com/choirless).
+This module was created as part of the [Choirless project](https://github.com/choirless), now released as part of [Rend-o-matic](https://github.com/Rend-o-matic).
 
-Stitcheroo is a module that takes a list of video filepaths and then combines them together using FFMPEG to output a single video with all the source videos next to each other. The generated video is then return as a buffer.
+stitcheroo is a module that takes a list of video filepaths and then combines them together using FFmpeg to output a single video with all the source videos next to each other. The generated video is then returned as a buffer.
 
 ## Usage
 
@@ -52,7 +52,12 @@ stitcheroo(videosToCombine, options)
 
 ## Stitcheroo Arguments
 
-### stitcheroo(`[VIDEO FILE PATHS ARRAY]`, `[OPTIONS OBJECT]`)
+```javascript
+stitcheroo(
+    `[VIDEO FILE PATHS ARRAY]`, 
+    `[OPTIONS OBJECT]`
+);
+```
 
 #### VIDEO FILE PATHS
 
@@ -61,7 +66,7 @@ This is an array of file paths pointing to the videos you'd like to combine. The
 #### OPTIONS
 
 Defaults:
-```javascript
+```json
 {
     dimensions : {
         width: 1920,
