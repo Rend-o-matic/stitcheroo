@@ -1,5 +1,7 @@
 # stitcheroo
 
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![Slack](https://img.shields.io/badge/Join-Slack-blue)](https://callforcode.org/slack)
+
 Stitch all of your videos into a lovely big video wall.
 
 ## Description
