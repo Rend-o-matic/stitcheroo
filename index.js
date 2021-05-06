@@ -161,7 +161,7 @@ function stitchVideo(videos, container, margin, shouldCenter, returnAsFile, pan,
         }
 
         // Construct the video + audio filter arguments and output paths
-        const filterArguments = ['-filter_complex', FILTER, '-map', `"[${lastKey}]"`, '-movflags', '+faststart ', '-filter_complex', `"${AUDIO_FLAGS}`, '-c:a', 'mp3', '-threads', 8, OUTPUT_FILE_NAME, '-y'];
+        const filterArguments = ['-filter_complex', FILTER, '-map', `"[${lastKey}]"`, '-movflags', '+faststart ', '-filter_complex', `"${AUDIO_FLAGS}`, '-c:a', 'aac', '-threads', 8, OUTPUT_FILE_NAME, '-y'];
 
         // And combine all of the arguments
         stitchArguments = stitchArguments.concat(inputArguments, filterArguments);
